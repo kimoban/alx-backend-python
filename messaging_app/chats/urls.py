@@ -3,10 +3,10 @@ from rest_framework.routers import DefaultRouter
 from .views import ConversationViewSet, MessageViewSet
 
 router = DefaultRouter()
+routers.DefaultRouters()
 router.register(r'conversations', ConversationViewSet, basename='conversation')
 router.register(r'messages', MessageViewSet, basename='message')
 
 urlpatterns = [
-    routers.DefaultRouters()
     path('', include(router.urls)),
 ]
