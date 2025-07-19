@@ -10,6 +10,12 @@ class User(AbstractUser):
         verbose_name='email address',
         help_text="User's email address"
     )
+
+    password = models.PasswordField(
+        unique=True,
+        verbose_name='password'
+        help_texts="User's password"
+    )
     
     first_name = models.CharField(
         max_length=150,
