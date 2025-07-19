@@ -38,3 +38,22 @@ class ConversationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversation
         fields = ['id', 'participants', 'created_at', 'messages']
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['id', 'sender', 'conversation', 'message_body']
+    
+    def validate_message_body(self, value):
+        """Example of field-level validation"""
+        if len(value.strip()) < 1:
+            raise serializers.ValidationError("Message cannot be empty")
+        if 'badword' in value.lower():
+            raise serializers.ValidationError("Message contains inappropriate content")
+        return value
+    
+    def validate(self, data):
+        """Example of object-level validation"""
+        if data['sender'] not in data['conversation'].participants.all():
+            raise serializers.ValidationError("Sender must be a conversation participant")
+        return data
