@@ -5,6 +5,23 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
+    email = models.EmailField(
+        unique=True,
+        verbose_name='email address',
+        help_text="User's email address"
+    )
+    
+    first_name = models.CharField(
+        max_length=150,
+        blank=False,  # Making required (default is blank=True)
+        verbose_name='first name'
+    )
+    
+    last_name = models.CharField(
+        max_length=150,
+        blank=False,  # Making required (default is blank=True)
+        verbose_name='last name'
+    )
     ROLE_CHOICES = [
         ('guest', 'Guest'),
         ('host', 'Host'),
