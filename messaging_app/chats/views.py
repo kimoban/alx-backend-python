@@ -55,7 +55,16 @@ class MessageViewSet(viewsets.ModelViewSet):
         if date_from and date_to:
             queryset = queryset.filter(
                 sent_at__range=[date_from, date_to]
-                filter=filter.HTTP_204_NO_CONTENT  # Filter code
             )
             
         return queryset.order_by('-sent_at')
+
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
+    filterset_fields = ["sender__role"]
+    ordering_fields = ["sent_at"]
+    ordering = ["-sent_at"]
+    search_fields = ["message_body", "sender__first_name", "sender__last_name"]
