@@ -41,3 +41,20 @@ class MessageViewSet(viewsets.ModelViewSet):
             {"detail": "Message deleted successfully"},
             status=status.HTTP_204_NO_CONTENT  # Status code
         )
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Filter by query parameters
+        conversation_id = self.request.query_params.get('conversation_id')
+        if conversation_id:
+            queryset = queryset.filter(conversation_id=conversation_id)
+            
+        # Filter by date range
+        date_from = self.request.query_params.get('date_from')
+        date_to = self.request.query_params.get('date_to')
+        if date_from and date_to:
+            queryset = queryset.filter(
+                sent_at__range=[date_from, date_to]
+            )
+            
+        return queryset.order_by('-sent_at')
