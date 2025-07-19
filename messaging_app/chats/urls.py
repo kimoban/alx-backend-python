@@ -10,3 +10,18 @@ router.register(r'messages', MessageViewSet, basename='message')
 urlpatterns = [
     path('', include(router.urls)),
 ]
+
+# Initialize the DefaultRouter
+router = DefaultRouter()
+
+# Register your ViewSets with the router
+router.register(r'conversations', ConversationViewSet, basename='conversation')
+router.register(r'messages', MessageViewSet, basename='message')
+
+urlpatterns = [
+    # Include the router-generated URLs
+    path('', include(router.urls)),
+    
+    # You can add additional non-ViewSet URLs here if needed
+    # path('custom-endpoint/', custom_view, name='custom-view'),
+]
