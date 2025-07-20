@@ -1,4 +1,6 @@
-# Messaging App with Django REST Framework
+# Building Robust APIs
+
+## Messaging App with Django REST Framework
 
 A RESTful API for user messaging built with Django and Django REST Framework (DRF).
 
