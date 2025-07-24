@@ -288,6 +288,7 @@ class OffensiveLanguageMiddleware:
         return response
 
 
+
 class RolePermissionMiddleware:
     """
     Middleware that checks the user's role before allowing access to specific actions.
