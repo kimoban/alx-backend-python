@@ -74,7 +74,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "chats.middleware.RolePermissionMiddleware",  # Role-based access control middleware
+    "chats.middleware.RolepermissionMiddleware",  # Role-based access control middleware
     "chats.middleware.OffensiveLanguageMiddleware",  # Rate limiting middleware
     "chats.middleware.RestrictAccessByTimeMiddleware",  # Time restriction middleware
     "chats.middleware.RequestLoggingMiddleware",  # Request logging middleware
@@ -153,7 +153,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+"chats.middleware.RolepermissionMiddleware",
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
