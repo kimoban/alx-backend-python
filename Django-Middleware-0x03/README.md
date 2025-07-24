@@ -171,23 +171,23 @@ python middleware_summary.py
 
 ## 📁 Project Structure
 
-Django-Middleware-0x03/
-├── chats/                      # Main application
-│   ├── middleware.py          # Custom middleware classes
-│   ├── models.py             # User, Conversation, Message models
-│   ├── views.py              # API viewsets
-│   ├── serializers.py        # DRF serializers
-│   ├── urls.py               # URL routing
-│   └── admin.py              # Admin interface configuration
-├── Django-Middleware-0x03/    # Project settings
-│   ├── settings.py           # Django configuration
-│   ├── urls.py               # Root URL configuration
-│   └── wsgi.py               # WSGI application
-├── logs/                      # Log files
-│   └── requests.log          # Request logging output
-├── manage.py                  # Django management script
-├── requirements.txt          # Python dependencies
-└── README.md                 # This file
+Django-Middleware-0x03/  
+├── chats/                      # Main application  
+│   ├── middleware.py          # Custom middleware classes  
+│   ├── models.py             # User, Conversation, Message models  
+│   ├── views.py              # API viewsets  
+│   ├── serializers.py        # DRF serializers  
+│   ├── urls.py               # URL routing  
+│   └── admin.py              # Admin interface configuration  
+├── Django-Middleware-0x03/    # Project settings  
+│   ├── settings.py           # Django configuration  
+│   ├── urls.py               # Root URL configuration  
+│   └── wsgi.py               # WSGI application  
+├── logs/                      # Log files  
+│   └── requests.log          # Request logging output  
+├── manage.py                  # Django management script  
+├── requirements.txt          # Python dependencies  
+└── README.md                 # This file  
 
 ## ⚙️ Configuration
 
