@@ -289,7 +289,7 @@ class OffensiveLanguageMiddleware:
 
 
 
-class RolePermissionMiddleware:
+class RolepermissionMiddleware:
     """
     Middleware that checks the user's role before allowing access to specific actions.
     Only admin and moderator users are allowed to perform certain privileged operations.
