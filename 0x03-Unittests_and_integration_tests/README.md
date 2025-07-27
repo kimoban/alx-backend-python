@@ -39,11 +39,11 @@ This project implements:
 ## File Structure
 ```
 project/
-├── client.py # Github API client implementation
-├── fixtures.py # Test data fixtures
+├── client.py      # Github API client implementation
+├── fixtures.py    # Test data fixtures
 ├── test_client.py # Unit + integration tests for client
-├── test_utils.py # Unit tests for utility functions
-└── utils.py # Utility functions
+├── test_utils.py  # Unit tests for utility functions
+└── utils.py       # Utility functions
 ```
 
 ## Testing Concepts
