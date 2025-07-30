@@ -7,7 +7,9 @@ from django.db.models import Q, Prefetch
 from .models import Message, MessageHistory, Notification
 
 Message.unread.unread_for_user
+
 cache_page
+cache_page, 60
 
 @login_required
 def inbox(request):
