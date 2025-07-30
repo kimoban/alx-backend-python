@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block title %}Inbox - Messaging App{% endblock %}
+{% block content %}
+<h1>Your Inbox</h1>
+
+<div style="margin-bottom: 20px">
+  <strong>Unread Messages: {{ unread_count }}</strong>
+</div>
+
+<h2>Unread Messages</h2>
+{% if unread_messages %} {% for message in unread_messages %}
+<div class="message unread">
+  <div class="message-header">
+    From: <strong>{{ message.sender.username }}</strong>
+    {% if message.parent_message %}
+    <span style="color: #6c757d"
+      >(Reply to: {{ message.parent_message.content|truncatechars:30 }})</span
+    >
+    {% endif %}
+  </div>
+  <div class="message-content">{{ message.content }}</div>
+  <div class="message-footer">
+    {{ message.timestamp }}
+    <a href="{% url 'messaging:message_detail' message.id %}" class="btn"
+      >View Details</a
+    >
+  </div>
+</div>
+{% endfor %} {% else %}
+<p>No unread messages.</p>
+{% endif %}
+
+<h2>Recent Read Messages</h2>
+{% if read_messages %} {% for message in read_messages %}
+<div class="message">
+  <div class="message-header">
+    From: <strong>{{ message.sender.username }}</strong>
+    {% if message.parent_message %}
+    <span style="color: #6c757d"
+      >(Reply to: {{ message.parent_message.content|truncatechars:30 }})</span
+    >
+    {% endif %}
+  </div>
+  <div class="message-content">{{ message.content }}</div>
+  <div class="message-footer">
+    {{ message.timestamp }}
+    <a href="{% url 'messaging:message_detail' message.id %}" class="btn"
+      >View Details</a
+    >
+  </div>
+</div>
+{% endfor %} {% else %}
+<p>No read messages.</p>
+{% endif %} {% endblock %}
