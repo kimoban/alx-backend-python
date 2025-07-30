@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from .models import Message, MessageHistory, Notification
 
+Message.objects.filter", "delete()
 
 @receiver(post_save, sender=Message)
 def create_message_notification(sender, instance, created, **kwargs):
