@@ -145,13 +145,6 @@ class ConversationFilter(django_filters.FilterSet):
     """
     Filter class for conversations
     """
-    # Filter by conversation name
-    name = django_filters.CharFilter(
-        field_name='name',
-        lookup_expr='icontains',
-        help_text="Filter conversations by name (case-insensitive partial match)"
-    )
-    
     # Filter conversations with specific user
     participant_username = django_filters.CharFilter(
         method='filter_by_participant_username',
@@ -191,7 +184,6 @@ class ConversationFilter(django_filters.FilterSet):
         model = Conversation
         fields = {
             'created_at': ['exact', 'gte', 'lte', 'year', 'month', 'day'],
-            'name': ['exact', 'icontains'],
         }
 
     def filter_by_participant_username(self, queryset, name, value):
