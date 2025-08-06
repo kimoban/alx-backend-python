@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block title %}Public Chat Statistics - Messaging
+App{% endblock %} {% block content %}
+<h1>Public Chat Statistics</h1>
+
+<div class="cache-info">
+  <strong>Cache Info:</strong> This view is cached for 30 seconds. <br />Cached
+  at: {{ cache_info.cached_at }} <br />Cache timeout: {{
+  cache_info.cache_timeout }} seconds
+</div>
+
+<div
+  style="
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  "
+>
+  <div class="message">
+    <h3>Overall Statistics</h3>
+    <p><strong>Total Messages:</strong> {{ total_messages }}</p>
+    <p><strong>Total Users:</strong> {{ total_users }}</p>
+    <p><strong>Messages in Last 24 Hours:</strong> {{ recent_messages }}</p>
+  </div>
+
+  <div class="message">
+    <h3>Most Active Users</h3>
+    {% for user in active_users %}
+    <p>{{ user.username }}: {{ user.message_count }} messages</p>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="message">
+  <h3>Recent Conversations</h3>
+  {% for message in recent_conversations %}
+  <div style="border-bottom: 1px solid #eee; padding: 10px 0">
+    <strong>{{ message.sender.username }}</strong> →
+    <strong>{{ message.receiver.username }}</strong> <br />{{
+    message.content|truncatechars:100 }} <br /><small
+      >{{ message.timestamp }}</small
+    >
+  </div>
+  {% endfor %}
+</div>
+
+<div style="margin-top: 20px">
+  <a href="#" onclick="location.reload()" class="btn">Refresh Statistics</a>
+  <small style="margin-left: 10px"
+    >Note: Data is cached and may not reflect real-time changes</small
+  >
+</div>
+{% endblock %}
