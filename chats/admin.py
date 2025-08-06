@@ -75,7 +75,7 @@ class MessageInline(admin.TabularInline):
 class ConversationAdmin(admin.ModelAdmin):
     """Admin view for Conversation model"""
 
-    list_display = ("id", "created_at", "participants_list")
+    list_display = ("conversation_id", "created_at", "participants_list")
     filter_horizontal = ("participants",)  # Better widget for many-to-many
     inlines = [MessageInline]
 
@@ -90,7 +90,7 @@ class MessageAdmin(admin.ModelAdmin):
     """Admin view for Message model"""
 
     list_display = (
-        "id",
+        "message_id",
         "sender",
         "conversation",
         "sent_at",
