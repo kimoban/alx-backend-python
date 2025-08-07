@@ -1,0 +1,64 @@
+{% extends 'base.html' %} {% block title %}Conversation - Messaging App{%
+endblock %} {% block content %}
+<h1>Conversation with {{ other_user.username }}</h1>
+
+<div class="cache-info">
+  <strong>Cache Info:</strong> This view is cached for 60 seconds to improve
+  performance. Total messages in conversation: {{ total_messages }}
+</div>
+
+{% if messages %} {% for message in messages %}
+<div
+  class="message {% if message.receiver == request.user and not message.read %}unread{% endif %}"
+>
+  <div class="message-header">
+    <strong>{{ message.sender.username }}</strong>
+    {% if message.edited %}
+    <span style="color: #ffc107">(Edited)</span>
+    {% endif %} {% if message.parent_message %}
+    <div class="thread">
+      <small
+        >Replying to: {{ message.parent_message.content|truncatechars:50
+        }}</small
+      >
+    </div>
+    {% endif %}
+  </div>
+  <div class="message-content">{{ message.content }}</div>
+  <div class="message-footer">
+    {{ message.timestamp }} {% if message.sender == request.user %}
+    <a href="{% url 'messaging:edit_message' message.id %}" class="btn">Edit</a>
+    {% endif %}
+    <a href="{% url 'messaging:message_detail' message.id %}" class="btn"
+      >Details</a
+    >
+  </div>
+
+  {% if message.edit_history.all %}
+  <div class="edit-history">
+    <strong>Edit History:</strong>
+    {% for history in message.edit_history.all %}
+    <div>
+      {{ history.edited_at }}: {{ history.old_content|truncatechars:100 }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endfor %} {% else %}
+<p>No messages in this conversation yet.</p>
+{% endif %}
+
+<div style="margin-top: 30px">
+  <h3>Send a Reply</h3>
+  <form method="post" action="{% url 'messaging:send_message' %}">
+    {% csrf_token %}
+    <input type="hidden" name="receiver_id" value="{{ other_user.id }}" />
+    <div class="form-group">
+      <label for="content">Message:</label>
+      <textarea name="content" id="content" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn">Send Message</button>
+  </form>
+</div>
+{% endblock %}
