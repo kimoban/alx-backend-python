@@ -181,11 +181,13 @@ class TokenService:
         """
         Generate access and refresh tokens for a user
         """
+        from rest_framework_simplejwt.tokens import AccessToken
         refresh = RefreshToken.for_user(user)
+        access = AccessToken.for_user(user)
         return {
             'refresh': str(refresh),
-            'access': str(refresh.access_token),
-            'access_expires_in': refresh.access_token.lifetime.total_seconds() if refresh.access_token.lifetime is not None else 0,
+            'access': str(access),
+            'access_expires_in': access.lifetime.total_seconds() if access.lifetime is not None else 0,
             'refresh_expires_in': refresh.lifetime.total_seconds() if refresh.lifetime is not None else 0,
         }
     
@@ -197,7 +199,7 @@ class TokenService:
         try:
             # Convert the string token to a validated token object
             from rest_framework_simplejwt.tokens import UntypedToken
-            validated_token = UntypedToken(token)
+            validated_token = UntypedToken(token)  # type: ignore
             refresh_token = RefreshToken(validated_token)
             refresh_token.blacklist()
             return True
@@ -230,7 +232,7 @@ class AuthenticationHelper:
         """
         try:
             from rest_framework_simplejwt.tokens import AccessToken
-            access_token = AccessToken(token=token)
+            access_token = AccessToken(token)  # type: ignore
             user_id = access_token['user_id']
             return User.objects.get(id=user_id, is_active=True)
         except Exception as e:

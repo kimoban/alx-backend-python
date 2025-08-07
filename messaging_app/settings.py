@@ -28,10 +28,10 @@ try:
         SECRET_KEY=(str, "django-insecure-change-me-in-production"),
         DJANGO_ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1"]),
         DB_NAME=(str, "messaging_app_db"),
-        DB_USER=(str, ""),
+        DB_USER=(str, "root"),
         DB_PASSWORD=(str, ""),
         DB_HOST=(str, "localhost"),
-        DB_PORT=(str, "5432"),
+        DB_PORT=(str, "3306"),
     )
     
     # Take environment variables from .env file
@@ -44,11 +44,25 @@ try:
     DEBUG = env("DEBUG")
     ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS")
     
+    # Database configuration using environ
+    DB_NAME = env("DB_NAME")
+    DB_USER = env("DB_USER")
+    DB_PASSWORD = env("DB_PASSWORD")
+    DB_HOST = env("DB_HOST")
+    DB_PORT = env("DB_PORT")
+    
 except ImportError:
     # Fallback to os.environ if django-environ is not installed
     SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-me-in-production")
     DEBUG = os.getenv("DEBUG", "True").lower() in ("true", "1", "yes")
     ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    
+    # Database configuration using os.getenv
+    DB_NAME = os.getenv("DB_NAME", "messaging_app_db")
+    DB_USER = os.getenv("DB_USER", "root")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+    DB_HOST = os.getenv("DB_HOST", "localhost")
+    DB_PORT = os.getenv("DB_PORT", "3306")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if DEBUG:
@@ -109,22 +123,17 @@ WSGI_APPLICATION = "messaging_app.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": DB_NAME,
+        "USER": DB_USER,
+        "PASSWORD": DB_PASSWORD,
+        "HOST": DB_HOST,
+        "PORT": DB_PORT,
+        "OPTIONS": {
+            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
-
-# Alternative PostgreSQL configuration (uncomment if needed)
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": env("DB_NAME") if 'env' in locals() else os.getenv("DB_NAME", "messaging_app_db"),
-#         "USER": env("DB_USER") if 'env' in locals() else os.getenv("DB_USER", ""),
-#         "PASSWORD": env("DB_PASSWORD") if 'env' in locals() else os.getenv("DB_PASSWORD", ""),
-#         "HOST": env("DB_HOST") if 'env' in locals() else os.getenv("DB_HOST", "localhost"),
-#         "PORT": env("DB_PORT") if 'env' in locals() else os.getenv("DB_PORT", "5432"),
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

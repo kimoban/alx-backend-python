@@ -2,8 +2,6 @@
 
 <!-- Centered badges (remove HTML for Markdown lint compliance) -->
 
-<p align="center">
-
 ![Python](https://img.shields.io/badge/Python-3.7%2B-blue?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-5.2.4-green?logo=django&logoColor=white)
 ![DRF](https://img.shields.io/badge/DRF-3.16.0-red?logo=django&logoColor=white)
@@ -19,7 +17,14 @@ A comprehensive collection of advanced Python backend development projects showc
 
 ## 📂 Project Structure
 
-```
+alx-backend-python/
+├── 0x03-Unittests_and_integration_tests/    # Testing fundamentals & best practices
+├── Django-Middleware-0x03/                  # Advanced Django middleware & security
+├── messaging_app/                           # RESTful API development with DRF
+├── python-context-async-operations-0x02/    # Context managers & async programming
+├── python-decorators-0x01/                  # Advanced decorator patterns
+├── python-generators-0x00/                  # Memory-efficient data processing
+└── README.md                                # This comprehensive guide
 alx-backend-python/
 ├── 0x03-Unittests_and_integration_tests/    # Testing fundamentals & best practices
 ├── Django-Middleware-0x03/                  # Advanced Django middleware & security
@@ -304,7 +309,7 @@ git clone https://github.com/kimoban/alx-backend-python.git
 cd alx-backend-python
 ```
 
-2. **Set Up Virtual Environment**
+1. **Set Up Virtual Environment**
 
 ```bash
 # Create virtual environment
@@ -317,7 +322,7 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-3. **Install Dependencies**
+1. **Install Dependencies**
 
 Each sub-project has its own requirements. Install dependencies based on the project you want to explore:
 
@@ -386,8 +391,6 @@ python 0-stream_users.py
 python 1-batch_processing.py
 ```
 
----
-
 ## 🧪 Testing
 
 ### Running All Tests
@@ -407,6 +410,7 @@ python manage.py test
 ```
 
 ### Test Coverage
+
 Each project includes comprehensive test suites:
 
 - **Unit Tests**: Individual component testing
@@ -531,4 +535,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 <!-- End centered call-to-action -->
 
-</p>
+<!-- End centered call-to-action -->
