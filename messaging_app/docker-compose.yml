@@ -14,6 +14,7 @@ services:
     networks:
       - messaging_network
     command: ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+      - python3 manage.py runserver
 
   db:
     image: mysql:8.0
