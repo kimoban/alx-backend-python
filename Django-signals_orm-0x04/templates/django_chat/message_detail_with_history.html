@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Message Detail with Edit History</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .message-header {
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        margin: -20px -20px 20px -20px;
+        border-radius: 8px 8px 0 0;
+      }
+      .message-content {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      .edit-indicator {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        color: #856404;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin: 10px 0;
+        font-size: 14px;
+      }
+      .edit-history {
+        margin-top: 30px;
+        border-top: 2px solid #dee2e6;
+        padding-top: 20px;
+      }
+      .history-item {
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 15px;
+        margin: 10px 0;
+        position: relative;
+      }
+      .history-item.current {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .history-header {
+        font-weight: bold;
+        color: #495057;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .history-content {
+        font-style: italic;
+        color: #6c757d;
+        background-color: white;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #dee2e6;
+      }
+      .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 4px 2px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .btn:hover {
+        background-color: #0056b3;
+      }
+      .btn-warning {
+        background-color: #ffc107;
+        color: #212529;
+      }
+      .btn-warning:hover {
+        background-color: #e0a800;
+      }
+      .btn-secondary {
+        background-color: #6c757d;
+      }
+      .btn-secondary:hover {
+        background-color: #5a6268;
+      }
+      .timeline {
+        border-left: 3px solid #007bff;
+        margin-left: 10px;
+        padding-left: 20px;
+      }
+      .stats {
+        background-color: #e3f2fd;
+        border: 1px solid #bbdefb;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+      .no-history {
+        text-align: center;
+        color: #6c757d;
+        font-style: italic;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="message-header">
+        <h1>Message Details</h1>
+        <p>
+          From: <strong>{{ message.sender.username }}</strong> to
+          <strong>{{ message.receiver.username }}</strong>
+        </p>
+      </div>
+
+      <!-- Message Statistics -->
+      <div class="stats">
+        <strong>Message Statistics:</strong><br />
+        Sent: {{ message.timestamp }}<br />
+        {% if message.edited %}
+        <span class="edit-indicator">✏️ This message has been edited</span
+        ><br />
+        {% endif %} Total Edits: {{ edit_history.count }}<br />
+        Status: {% if message.read %}Read{% else %}Unread{% endif %}
+      </div>
+
+      <!-- Current Message Content -->
+      <div class="message-content">
+        <h3>Current Version:</h3>
+        {{ message.content }}
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="margin: 20px 0">
+        {% if can_edit %}
+        <a href="{% url 'django_chat:edit_message' message.id %}" class="btn"
+          >Edit Message</a
+        >
+        {% endif %}
+        <a
+          href="{% url 'django_chat:message_edit_history' message.id %}"
+          class="btn btn-secondary"
+          >View Full History</a
+        >
+        <a
+          href="#"
+          onclick="loadHistoryAjax({{ message.id }})"
+          class="btn btn-secondary"
+          >Load History (AJAX)</a
+        >
+      </div>
+
+      <!-- Edit History Display -->
+      <div class="edit-history">
+        <h2>Edit History</h2>
+
+        {% if has_edit_history %}
+        <p>
+          <strong>{{ edit_history.count }}</strong> edit(s) found for this
+          message:
+        </p>
+
+        <div class="timeline">
+          <!-- Current Version -->
+          <div class="history-item current">
+            <div class="history-header">
+              <span>🔄 Current Version</span>
+              <span>{{ message.timestamp }}</span>
+            </div>
+            <div class="history-content">{{ message.content }}</div>
+          </div>
+
+          <!-- Edit History -->
+          {% for history in edit_history %}
+          <div class="history-item">
+            <div class="history-header">
+              <span>📝 Edit #{{ forloop.counter }}</span>
+              <div>
+                <span>{{ history.edited_at }}</span>
+                {% if history.editor %}
+                <small>(by {{ history.editor.username }})</small>
+                {% endif %} {% if can_edit %}
+                <form
+                  method="post"
+                  action="{% url 'django_chat:revert_message' message.id history.id %}"
+                  style="display: inline"
+                >
+                  {% csrf_token %}
+                  <button
+                    type="submit"
+                    class="btn btn-warning"
+                    style="padding: 2px 8px; font-size: 12px"
+                    onclick="return confirm('Are you sure you want to revert to this version?')"
+                  >
+                    Revert
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </div>
+            <div class="history-content">{{ history.old_content }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-history">
+          <p>📝 This message has not been edited yet.</p>
+          <p>
+            Any future edits will be automatically tracked and displayed here.
+          </p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- AJAX History Container -->
+      <div id="ajax-history" style="margin-top: 30px"></div>
+    </div>
+
+    <script>
+      function loadHistoryAjax(messageId) {
+        fetch(`/django-chat/api/message-history/${messageId}/`)
+          .then((response) => response.json())
+          .then((data) => {
+            let historyHtml = "<h3>Edit History (Loaded via AJAX)</h3>";
+            historyHtml += `<p><strong>Total Edits:</strong> ${data.total_edits}</p>`;
+
+            if (data.history.length > 0) {
+              historyHtml += '<div class="timeline">';
+              data.history.forEach((entry, index) => {
+                let className = entry.is_current
+                  ? "history-item current"
+                  : "history-item";
+                let title = entry.is_current
+                  ? "🔄 Current Version"
+                  : `📝 Previous Version #${index}`;
+
+                historyHtml += `
+                                <div class="${className}">
+                                    <div class="history-header">
+                                        <span>${title}</span>
+                                        <span>${
+                                          entry.timestamp || entry.edited_at
+                                        }</span>
+                                    </div>
+                                    <div class="history-content">
+                                        ${entry.content}
+                                    </div>
+                                </div>
+                            `;
+              });
+              historyHtml += "</div>";
+            } else {
+              historyHtml += "<p>No edit history found.</p>";
+            }
+
+            document.getElementById("ajax-history").innerHTML = historyHtml;
+          })
+          .catch((error) => {
+            console.error("Error loading history:", error);
+            document.getElementById("ajax-history").innerHTML =
+              '<p style="color: red;">Error loading edit history.</p>';
+          });
+      }
+    </script>
+  </body>
+</html>

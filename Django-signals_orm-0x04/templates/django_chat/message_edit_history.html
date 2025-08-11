@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Message Edit History</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background-color: #17a2b8;
+        color: white;
+        padding: 15px;
+        margin: -20px -20px 20px -20px;
+        border-radius: 8px 8px 0 0;
+      }
+      .message-info {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+      .stat-card {
+        background-color: #e3f2fd;
+        border: 1px solid #bbdefb;
+        padding: 15px;
+        border-radius: 4px;
+        text-align: center;
+      }
+      .timeline {
+        position: relative;
+        margin: 30px 0;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 30px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #007bff;
+      }
+      .timeline-item {
+        position: relative;
+        margin: 20px 0;
+        padding-left: 70px;
+      }
+      .timeline-icon {
+        position: absolute;
+        left: 20px;
+        top: 10px;
+        width: 20px;
+        height: 20px;
+        background: #007bff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+      }
+      .timeline-icon.current {
+        background: #28a745;
+      }
+      .timeline-content {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 15px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .timeline-content.current {
+        background: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .timeline-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+      .timeline-text {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+        white-space: pre-wrap;
+        margin: 10px 0;
+      }
+      .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 4px 2px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .btn:hover {
+        background-color: #0056b3;
+      }
+      .btn-success {
+        background-color: #28a745;
+      }
+      .btn-success:hover {
+        background-color: #218838;
+      }
+      .btn-warning {
+        background-color: #ffc107;
+        color: #212529;
+      }
+      .btn-warning:hover {
+        background-color: #e0a800;
+      }
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin: 20px 0;
+      }
+      .comparison-panel {
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .comparison-header {
+        background: #f8f9fa;
+        padding: 10px;
+        font-weight: bold;
+        border-bottom: 1px solid #dee2e6;
+      }
+      .comparison-content {
+        padding: 15px;
+        font-family: "Courier New", monospace;
+        white-space: pre-wrap;
+        min-height: 100px;
+      }
+      .no-history {
+        text-align: center;
+        color: #6c757d;
+        font-style: italic;
+        padding: 40px;
+        background: #f8f9fa;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>📜 Complete Edit History</h1>
+        <p>Detailed timeline of all changes made to this message</p>
+      </div>
+
+      <!-- Message Information -->
+      <div class="message-info">
+        <h3>Message Details</h3>
+        <p>
+          <strong>From:</strong> {{ message.sender.username }}
+          <strong>To:</strong> {{ message.receiver.username }}
+        </p>
+        <p><strong>Originally sent:</strong> {{ message.timestamp }}</p>
+        <p>
+          <strong>Current status:</strong>
+          {% if message.edited %}
+          <span style="color: #ffc107">✏️ Edited</span>
+          {% else %}
+          <span style="color: #28a745">📝 Original</span>
+          {% endif %}
+        </p>
+      </div>
+
+      <!-- Statistics -->
+      <div class="stats">
+        <div class="stat-card">
+          <h4>📊 Total Edits</h4>
+          <h2>{{ total_edits }}</h2>
+        </div>
+        <div class="stat-card">
+          <h4>🕒 Timeline Entries</h4>
+          <h2>{{ timeline|length }}</h2>
+        </div>
+        <div class="stat-card">
+          <h4>📝 Current Version</h4>
+          <p>{{ message.timestamp|date:"M d, Y H:i" }}</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="margin: 20px 0">
+        <a
+          href="{% url 'django_chat:message_detail_with_history' message.id %}"
+          class="btn"
+          >← Back to Message</a
+        >
+        {% if message.sender == request.user %}
+        <a
+          href="{% url 'django_chat:edit_message' message.id %}"
+          class="btn btn-success"
+          >✏️ Edit Message</a
+        >
+        {% endif %}
+      </div>
+
+      {% if total_edits > 0 %}
+      <!-- Complete Timeline -->
+      <h2>📋 Complete Timeline</h2>
+      <div class="timeline">
+        {% for entry in timeline %}
+        <div class="timeline-item">
+          <div
+            class="timeline-icon {% if entry.is_current %}current{% endif %}"
+          >
+            {% if entry.is_current %}✓{% else %}{{ forloop.counter }}{% endif %}
+          </div>
+          <div
+            class="timeline-content {% if entry.is_current %}current{% endif %}"
+          >
+            <div class="timeline-header">
+              <span>
+                {% if entry.is_current %} 🔄 Current Version {% else %} 📝 Edit
+                #{{ timeline|length|add:"-"|add:forloop.counter0 }} {% endif %}
+              </span>
+              <div>
+                <span>{{ entry.timestamp|date:"M d, Y H:i:s" }}</span>
+                {% if entry.editor %}
+                <small>(by {{ entry.editor.username }})</small>
+                {% endif %}
+              </div>
+            </div>
+            <div class="timeline-text">{{ entry.content }}</div>
+            {% if not entry.is_current and message.sender == request.user %}
+            <form
+              method="post"
+              action="{% url 'django_chat:revert_message' message.id entry.history_id %}"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="btn btn-warning"
+                onclick="return confirm('Revert to this version? This will create a new edit entry.')"
+              >
+                🔄 Revert to This Version
+              </button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Content Comparison (Current vs Previous) -->
+      {% if edit_history.first %}
+      <h2>🔍 Content Comparison</h2>
+      <p>Comparing current version with the most recent previous version:</p>
+      <div class="comparison">
+        <div class="comparison-panel">
+          <div class="comparison-header">
+            📝 Previous Version ({{ edit_history.first.edited_at|date:"M d, Y
+            H:i" }})
+          </div>
+          <div class="comparison-content">
+            {{ edit_history.first.old_content }}
+          </div>
+        </div>
+        <div class="comparison-panel">
+          <div class="comparison-header">
+            ✅ Current Version ({{ message.timestamp|date:"M d, Y H:i" }})
+          </div>
+          <div class="comparison-content">{{ message.content }}</div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Detailed Edit History -->
+      <h2>📚 Detailed Edit Records</h2>
+      <table style="width: 100%; border-collapse: collapse; margin: 20px 0">
+        <thead>
+          <tr style="background: #f8f9fa">
+            <th
+              style="border: 1px solid #dee2e6; padding: 10px; text-align: left"
+            >
+              Edit #
+            </th>
+            <th
+              style="border: 1px solid #dee2e6; padding: 10px; text-align: left"
+            >
+              Date & Time
+            </th>
+            <th
+              style="border: 1px solid #dee2e6; padding: 10px; text-align: left"
+            >
+              Editor
+            </th>
+            <th
+              style="border: 1px solid #dee2e6; padding: 10px; text-align: left"
+            >
+              Content Preview
+            </th>
+            <th
+              style="border: 1px solid #dee2e6; padding: 10px; text-align: left"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background: #d4edda">
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              <strong>Current</strong>
+            </td>
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              {{ message.timestamp|date:"M d, Y H:i:s" }}
+            </td>
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              {{ message.sender.username }}
+            </td>
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              {{ message.content|truncatechars:50 }}
+            </td>
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              {% if message.sender == request.user %}
+              <a
+                href="{% url 'django_chat:edit_message' message.id %}"
+                class="btn"
+                style="padding: 4px 8px; font-size: 12px"
+                >Edit</a
+              >
+              {% endif %}
+            </td>
+          </tr>
+          {% for history in edit_history %}
+          <tr>
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              {{ forloop.counter }}
+            </td>
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              {{ history.edited_at|date:"M d, Y H:i:s" }}
+            </td>
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              {% if history.editor %}{{ history.editor.username }}{% else
+              %}Unknown{% endif %}
+            </td>
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              {{ history.old_content|truncatechars:50 }}
+            </td>
+            <td style="border: 1px solid #dee2e6; padding: 10px">
+              {% if message.sender == request.user %}
+              <form
+                method="post"
+                action="{% url 'django_chat:revert_message' message.id history.id %}"
+                style="display: inline"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="btn btn-warning"
+                  style="padding: 4px 8px; font-size: 12px"
+                  onclick="return confirm('Revert to this version?')"
+                >
+                  Revert
+                </button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% else %}
+      <div class="no-history">
+        <h3>📝 No Edit History</h3>
+        <p>This message has not been edited yet.</p>
+        <p>
+          When edits are made, the pre_save signal will automatically capture
+          the history here.
+        </p>
+        {% if message.sender == request.user %}
+        <a href="{% url 'django_chat:edit_message' message.id %}" class="btn"
+          >Make First Edit</a
+        >
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <!-- Technical Information -->
+      <div
+        style="
+          margin-top: 40px;
+          padding: 20px;
+          background: #f8f9fa;
+          border-radius: 4px;
+          border-left: 4px solid #007bff;
+        "
+      >
+        <h3>🔧 Technical Implementation Details</h3>
+        <ul>
+          <li>
+            <strong>Signal Handler:</strong>
+            <code>@receiver(pre_save, sender=Message)</code> in
+            <code>Django-Chat/Models.py</code>
+          </li>
+          <li>
+            <strong>Automatic Logging:</strong> Every edit triggers the signal
+            before saving
+          </li>
+          <li>
+            <strong>History Model:</strong> <code>MessageHistory</code> stores
+            old content with timestamps
+          </li>
+          <li>
+            <strong>Edit Tracking:</strong> <code>edited</code> boolean field
+            marks modified messages
+          </li>
+          <li>
+            <strong>Revert Capability:</strong> Users can revert to any previous
+            version
+          </li>
+        </ul>
+        <p>
+          <small>
+            <strong>Database Impact:</strong> Each edit creates one new
+            <code>MessageHistory</code> record. Original messages are never
+            lost, ensuring complete audit trail.
+          </small>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

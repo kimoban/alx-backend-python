@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Messaging App{% endblock %}</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .nav {
+        background-color: #007bff;
+        padding: 10px 0;
+        margin: -20px -20px 20px -20px;
+        border-radius: 8px 8px 0 0;
+      }
+      .nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        padding: 5px 10px;
+        border-radius: 4px;
+      }
+      .nav a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      .message {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 15px;
+        margin: 10px 0;
+      }
+      .message.unread {
+        background-color: #e3f2fd;
+        border-color: #2196f3;
+      }
+      .message-header {
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #495057;
+      }
+      .message-content {
+        margin: 10px 0;
+      }
+      .message-footer {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-top: 10px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 4px 2px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+      }
+      .btn:hover {
+        background-color: #0056b3;
+      }
+      .btn-danger {
+        background-color: #dc3545;
+      }
+      .btn-danger:hover {
+        background-color: #c82333;
+      }
+      .form-group {
+        margin: 15px 0;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      .alert {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+      .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+      }
+      .alert-error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+      }
+      .thread {
+        border-left: 3px solid #007bff;
+        margin-left: 20px;
+        padding-left: 15px;
+      }
+      .edit-history {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+      .cache-info {
+        background-color: #e2e3e5;
+        border: 1px solid #d6d8db;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="nav">
+        <a href="{% url 'messaging:inbox' %}">Inbox</a>
+        <a href="{% url 'messaging:send_message' %}">Send Message</a>
+        <a href="{% url 'messaging:notifications' %}">Notifications</a>
+        <a href="{% url 'chats:conversation_users' %}">Conversations</a>
+        <a href="{% url 'chats:public_stats' %}">Stats</a>
+        {% if user.is_authenticated %}
+        <span style="float: right; color: white"
+          >Welcome, {{ user.username }}!</span
+        >
+        {% endif %}
+      </nav>
+
+      {% if messages %} {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% block content %} {% endblock %}
+    </div>
+  </body>
+</html>
