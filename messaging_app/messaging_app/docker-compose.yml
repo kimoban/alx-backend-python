@@ -1,0 +1,42 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: messaging_app/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    networks:
+      - messaging_network
+    command: ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+      - python3 manage.py runserver
+
+  db:
+    image: mysql:8.0
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_DB=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - messaging_network
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  mysql_data:
+
+networks:
+  messaging_network:
+    driver: bridge

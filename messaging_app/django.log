@@ -1,0 +1,30 @@
+INFO 2025-08-06 22:31:59,132 autoreload 11 125194409085824 Watching for file changes with StatReloader
+INFO 2025-08-06 22:34:13,989 autoreload 11 140697314237312 Watching for file changes with StatReloader
+INFO 2025-08-06 22:36:30,849 autoreload 38 139672472034176 Watching for file changes with StatReloader
+INFO 2025-08-06 22:46:43,511 autoreload 38 139672472034176 /app/messaging_app/settings.py changed, reloading.
+INFO 2025-08-06 22:46:43,672 autoreload 11 140697314237312 /app/messaging_app/settings.py changed, reloading.
+INFO 2025-08-06 22:46:47,676 autoreload 67 131689950854016 Watching for file changes with StatReloader
+INFO 2025-08-06 22:46:47,676 autoreload 68 129773800852352 Watching for file changes with StatReloader
+INFO 2025-08-06 22:46:58,445 autoreload 67 131689950854016 /app/messaging_app/settings.py changed, reloading.
+INFO 2025-08-06 22:46:58,499 autoreload 68 129773800852352 /app/messaging_app/settings.py changed, reloading.
+INFO 2025-08-06 22:47:02,064 autoreload 72 123777576758144 Watching for file changes with StatReloader
+INFO 2025-08-06 22:47:02,067 autoreload 71 127464515046272 Watching for file changes with StatReloader
+INFO 2025-08-06 22:47:10,060 autoreload 71 127464515046272 /app/messaging_app/settings.py changed, reloading.
+INFO 2025-08-06 22:47:10,222 autoreload 72 123777576758144 /app/messaging_app/settings.py changed, reloading.
+INFO 2025-08-06 23:09:55,175 autoreload 54 128029422435200 Watching for file changes with StatReloader
+INFO 2025-08-06 23:13:10,371 autoreload 18 126916099697536 Watching for file changes with StatReloader
+INFO 2025-08-06 23:19:02,064 autoreload 16 133238617238400 Watching for file changes with StatReloader
+INFO 2025-08-06 23:27:12,172 autoreload 15 132223480474496 Watching for file changes with StatReloader
+INFO 2025-08-06 23:34:05,594 autoreload 10 138298282023808 Watching for file changes with StatReloader
+INFO 2025-08-06 23:34:34,768 autoreload 18 134051180522368 Watching for file changes with StatReloader
+INFO 2025-08-06 23:40:21,664 autoreload 11 138828512213888 Watching for file changes with StatReloader
+INFO 2025-08-06 23:42:44,736 autoreload 10 133563342166912 Watching for file changes with StatReloader
+INFO 2025-08-06 23:44:08,148 autoreload 10 139816862538624 Watching for file changes with StatReloader
+INFO 2025-08-06 23:46:25,342 autoreload 9 136656156347264 Watching for file changes with StatReloader
+INFO 2025-08-06 23:48:35,733 autoreload 10 123645755857792 Watching for file changes with StatReloader
+INFO 2025-08-06 23:53:24,013 autoreload 11568 1648 Watching for file changes with StatReloader
+INFO 2025-08-06 23:55:38,718 autoreload 10 123645755857792 /app/chats/models.py changed, reloading.
+INFO 2025-08-07 10:46:55,470 autoreload 22 133303818701696 Watching for file changes with StatReloader
+INFO 2025-08-07 10:55:11,792 autoreload 22 133303818701696 /app/messaging_app/wsgi.py changed, reloading.
+INFO 2025-08-07 10:55:38,985 autoreload 24 125110596324224 Watching for file changes with StatReloader
+INFO 2025-08-07 11:53:13,405 autoreload 24 125110596324224 /app/chats/serializers.py changed, reloading.
