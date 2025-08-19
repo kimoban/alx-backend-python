@@ -91,7 +91,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
     from django.db.models.query import QuerySet
 
-    def get_queryset(self) -> QuerySet: # type: ignore
+    def get_queryset(self) -> 'QuerySet': # type: ignore
         # Get conversations where current user is a participant
         return Conversation.objects.filter(
             participants=self.request.user
